@@ -7,12 +7,18 @@
 
 <div class="box">
 	<!-- <li><%= newItems %></li> --> 
-	<% for (let i = 0; i < newItems.length; i++) { %>
+	<!-- <% for (let i = 0; i < newItems.length; i++) { %>
 	<div class="item">
 		<input type="checkbox" />
-		<p><%= newItems[i] %></p>
+		<p><%= newItems[i].name %></p>
 	</div>
-	<% } %>
+	<% } %> -->
+	<% newItems.forEach(item => { %>
+		<div class="item">
+			<input type="checkbox" />
+			<p><%= item.name %></p>
+		</div>
+	<% }) %>
 	<form class="item" action="/" method="post">
 		<input type="text" name="newItem" placeholder="New item" autocomplete="off" />
 		<button type="submit" name="list" value=<%= listTitle %> >+</button>
