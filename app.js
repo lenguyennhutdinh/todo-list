@@ -39,23 +39,18 @@ const defaultItems = [
 ]
 
 app.get("/", async function (req, res) {
-	const day = date.getDate()
+	// const day = date.getDate()
 	try {
 		const items = await Item.find()
 		if (items.length === 0) {
 			await Item.insertMany(defaultItems)
 			console.log("Items inserted successfully")
 		}
-		res.render("list", { listTitle: day, newItems: items })
+		res.render("list", { listTitle: "Today", newItems: items })
 	} catch (err) {
 		console.log(err)
 	}
 })
-
-// app.get("/work", function (req, res) {
-// 	const workItems = []
-// 	res.render("list", { listTitle: "Work List", newItems: workItems })
-// })
 
 app.get("/:customListName", (req, res) => {
 	const customListName = req.params.customListName
@@ -69,10 +64,12 @@ app.get("/:customListName", (req, res) => {
 				})
 				list.save()
 
-				res.redirect('/' + customListName)
-			}
-			else {
-				res.render("list", { listTitle: foundList.name, newItems: foundList.items })
+				res.redirect("/" + customListName)
+			} else {
+				res.render("list", {
+					listTitle: foundList.name,
+					newItems: foundList.items,
+				})
 			}
 		})
 		.catch((err) => console.log(err))
@@ -84,22 +81,25 @@ app.get("/about", function (req, res) {
 
 app.post("/", function (req, res) {
 	const itemName = req.body.newItem
+	const listName = req.body.list
+
 	const item = new Item({ name: itemName })
-	item.save()
-	res.redirect("/")
+	if (listName === "Today") {
+		item.save()
+		res.redirect("/")
+	} else {
+		List.findOne({ name: listName }).then((list) => {
+			list.items.push(item)
+			list.save()
+		})
+		res.redirect("/" + listName)
+	}
 })
 
 app.post("/delete", async (req, res) => {
 	const itemId = req.body.checkbox
 	await Item.deleteOne({ _id: itemId })
 	res.redirect("/")
-})
-
-app.post("/work", function (req, res) {
-	const work = req.body.newItem
-	const workItem = new Item({ name: work })
-	workItem.save()
-	res.redirect("/work")
 })
 
 app.listen(8080, function () {
