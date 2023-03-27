@@ -5,6 +5,7 @@ import mongoose from "mongoose"
 import _ from "lodash"
 
 const app = express()
+const uri = "mongodb+srv://admin_dinh:123@cluster0.hqwa8bi.mongodb.net/todoListDB"
 
 app.set("view engine", "ejs")
 app.use(express.static("public"))
@@ -12,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 // Connect to MongoDB
 mongoose
-	.connect("mongodb://127.0.0.1:27017/todo-listDB", {
+	.connect(uri, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 	})
@@ -112,6 +113,6 @@ app.post("/delete", async (req, res) => {
 
 })
 
-app.listen(8080, function () {
+app.listen(process.env.PORT || 3000, function () {
 	console.log("listening on 8080")
 })
