@@ -1,0 +1,6 @@
+[build]
+command = "node app.js"
+publish = "public"
+
+[[plugins]]
+package = "./plugins/netlify-plugin-my-plugin"
