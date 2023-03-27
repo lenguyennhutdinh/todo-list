@@ -1,0 +1,4 @@
+[build]
+  publish = "public"
+
+  command = "node app.js"
