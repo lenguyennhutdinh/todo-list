@@ -98,8 +98,17 @@ app.post("/", function (req, res) {
 
 app.post("/delete", async (req, res) => {
 	const itemId = req.body.checkbox
-	await Item.deleteOne({ _id: itemId })
-	res.redirect("/")
+	const listName = req.body.listName
+	if (listName === "Today") {
+		await Item.deleteOne({ _id: itemId })
+		res.redirect("/")
+	} else {
+		await List.findOneAndUpdate({name: listName}, {$pull: {items: {_id: itemId}}})
+			.then(() => {
+				res.redirect("/" + listName)
+			})
+	}
+
 })
 
 app.listen(8080, function () {
