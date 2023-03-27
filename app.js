@@ -2,6 +2,7 @@ import express from "express"
 import bodyParser from "body-parser"
 import date from "./date.js"
 import mongoose from "mongoose"
+import _ from "lodash"
 
 const app = express()
 
@@ -53,7 +54,7 @@ app.get("/", async function (req, res) {
 })
 
 app.get("/:customListName", (req, res) => {
-	const customListName = req.params.customListName
+	const customListName = _.capitalize(req.params.customListName)
 
 	List.findOne({ name: customListName })
 		.then((foundList) => {
